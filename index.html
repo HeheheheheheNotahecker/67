@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="proxy-rotator.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Secure Access Portal</h1>
+            <p>Loading secure connection...</p>
+        </div>
+        <div class="loader"></div>
+        <div class="options">
+            <button onclick="redirectToGateway()">Standard Access</button>
+            <button onclick="openStealthTab()">Stealth Mode</button>
+            <button onclick="showBookmarklet()">Bookmarklet Tool</button>
+        </div>
+    </div>
+
+    <script>
+        // Auto-redirect after 3 seconds
+        setTimeout(() => {
+            redirectToGateway();
+        }, 3000);
+
+        function redirectToGateway() {
+            window.location.href = 'proxy-gateway.html';
+        }
+
+        function openStealthTab() {
+            window.open('about-blank-loader.html', '_blank');
+            window.location.href = 'about:blank';
+        }
+
+        function showBookmarklet() {
+            window.location.href = 'bookmarklet-generator.html';
+        }
+
+        // Register service worker for caching
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js');
+        }
+    </script>
+</body>
+</html>
