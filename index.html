@@ -1,45 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Portal</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="proxy-rotator.js"></script>
+    <title>about:blank</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: white;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        #blankScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 1000;
+        }
+        #searchEngine {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 900;
+        }
+        .hidden {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Secure Access Portal</h1>
-            <p>Loading secure connection...</p>
-        </div>
-        <div class="loader"></div>
-        <div class="options">
-            <button onclick="redirectToGateway()">Standard Access</button>
-            <button onclick="openStealthTab()">Stealth Mode</button>
-            <button onclick="showBookmarklet()">Bookmarklet Tool</button>
+    <!-- This looks exactly like about:blank -->
+    <div id="blankScreen"></div>
+    
+    <!-- Hidden search engine that activates on secret trigger -->
+    <div id="searchEngine">
+        <iframe id="browserFrame" style="width: 100%; height: 100%; border: none;"></iframe>
+        <div id="searchInterface" class="hidden">
+            <div class="search-header">
+                <input type="text" id="searchInput" placeholder="Search or enter website URL">
+                <button onclick="search()">Go</button>
+                <button onclick="hideSearch()">Hide</button>
+            </div>
         </div>
     </div>
 
+    <script src="blank-disguise.js"></script>
+    <script src="proxy-search.js"></script>
     <script>
-        // Auto-redirect after 3 seconds
-        setTimeout(() => {
-            redirectToGateway();
-        }, 3000);
-
-        function redirectToGateway() {
-            window.location.href = 'proxy-gateway.html';
-        }
-
-        function openStealthTab() {
-            window.open('about-blank-loader.html', '_blank');
-            window.location.href = 'about:blank';
-        }
-
-        function showBookmarklet() {
-            window.location.href = 'bookmarklet-generator.html';
-        }
-
         // Register service worker for caching
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/service-worker.js');
