@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Tab</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading" style="text-align: center; margin-top: 100px;">
+        <h3>Setting up new tab...</h3>
+    </div>
+
+    <script>
+        function createStealthWindow() {
+            try {
+                // Open about:blank in new window
+                const newWindow = window.open('about:blank', '_blank');
+                
+                if (newWindow) {
+                    // Inject proxy content
+                    newWindow.document.write(`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>New Tab</title>
+                            <style>
+                                body {
+                                    margin: 0;
+                                    padding: 20px;
+                                    font-family: Arial, sans-serif;
+                                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                    color: white;
+                                }
+                                .container {
+                                    max-width: 600px;
+                                    margin: 100px auto;
+                                    text-align: center;
+                                }
+                                .hidden {
+                                    display: none;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="container">
+                                <h1>Secure Browser</h1>
+                                <p>Privacy mode activated</p>
+                                <div id="content">
+                                    <input type="text" id="urlInput" placeholder="Enter website URL" style="padding: 10px; width: 300px; border: none; border-radius: 5px;">
+                                    <button onclick="navigateToSite()" style="padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 5px; margin-left: 10px;">Go</button>
+                                    <div style="margin-top: 20px;">
+                                        <button onclick="loadProxyService('https://corrosion.pro')" style="margin: 5px; padding: 10px; background: #2196F3; color: white; border: none; border-radius: 5px;">Proxy Service 1</button>
+                                        <button onclick="loadProxyService('https://womginx.github.io')" style="margin: 5px; padding: 10px; background: #FF9800; color: white; border: none; border-radius: 5px;">Proxy Service 2</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                function navigateToSite() {
+                                    const url = document.getElementById('urlInput').value;
+                                    if (url) {
+                                        const fullUrl = 'https://corrosion.pro/' + (url.startsWith('http') ? url : 'https://' + url);
+                                        window.location.href = fullUrl;
+                                    }
+                                }
+                                
+                                function loadProxyService(url) {
+                                    window.location.href = url;
+                                }
+                                
+                                // Auto-focus on input
+                                document.getElementById('urlInput').focus();
+                            </script>
+                        </body>
+                        </html>
+                    `);
+                    
+                    // Close original window
+                    window.close();
+                }
+            } catch (error) {
+                // Fallback if popup blocked
+                document.getElementById('loading').innerHTML = `
+                    <h3>Popup blocked! Please allow popups and refresh.</h3>
+                    <p>Alternative: <a href="proxy-gateway.html">Click here for standard access</a></p>
+                `;
+            }
+        }
+
+        // Execute on load
+        window.addEventListener('load', createStealthWindow);
+    </script>
+</body>
+</html>
