@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Establishing Connection</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="proxy-rotator.js"></script>
+    <script src="proxy-config.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Establishing Secure Connection</h1>
+            <p id="status">Initializing proxy rotation...</p>
+        </div>
+        <div class="loader"></div>
+        <div class="proxy-info">
+            <p id="proxyDisplay">Testing proxies...</p>
+        </div>
+    </div>
+
+    <script>
+        const proxyRotator = new ProxyRotator();
+        const proxyServices = [
+            "https://corrosion.pro",
+            "https://womginx.github.io",
+            "https://www.ultraviolet-node.com",
+            "https://hypertabs.undercase.workers.dev",
+            "https://interstellar.ink",
+            "https://nebula.varunbox.com"
+        ];
+
+        let currentAttempt = 0;
+        const maxAttempts = 5;
+
+        async function testProxy(proxy) {
+            return new Promise((resolve) => {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 3000);
+
+                fetch('https://www.google.com/gen_204', {
+                    mode: 'no-cors',
+                    signal: controller.signal
+                })
+                .then(() => {
+                    clearTimeout(timeout);
+                    resolve(true);
+                })
+                .catch(() => {
+                    clearTimeout(timeout);
+                    resolve(false);
+                });
+            });
+        }
+
+        async function findWorkingProxy() {
+            for (let i = 0; i < 10; i++) {
+                const proxy = proxyRotator.getRandomProxy();
+                document.getElementById('proxyDisplay').textContent = `Testing: ${proxy.substring(0, 50)}...`;
+                
+                if (await testProxy(proxy)) {
+                    document.getElementById('status').textContent = 'Proxy validated!';
+                    return proxy;
+                }
+            }
+            return null;
+        }
+
+        async function initializeConnection() {
+            document.getElementById('status').textContent = 'Testing proxy services...';
+            
+            // Try direct services first (faster)
+            const randomService = proxyServices[Math.floor(Math.random() * proxyServices.length)];
+            
+            // Test the service
+            try {
+                const test = await fetch(randomService, { mode: 'no-cors' });
+                document.getElementById('status').textContent = 'Service available! Redirecting...';
+                setTimeout(() => {
+                    window.location.href = randomService;
+                }, 1000);
+                return;
+            } catch (error) {
+                document.getElementById('status').textContent = 'Service blocked, trying custom proxies...';
+            }
+
+            // Fallback to custom proxies
+            const workingProxy = await findWorkingProxy();
+            
+            if (workingProxy) {
+                document.getElementById('status').textContent = 'Custom proxy active!';
+                // Redirect through proxy gateway
+                setTimeout(() => {
+                    if (workingProxy.startsWith('socks')) {
+                        window.location.href = `https://socksproxy.com/?server=${encodeURIComponent(workingProxy)}`;
+                    } else {
+                        window.location.href = `https://httpproxy.com/?server=${encodeURIComponent(workingProxy)}`;
+                    }
+                }, 1500);
+            } else {
+                document.getElementById('status').textContent = 'All proxies failed, using fallback...';
+                // Ultimate fallback
+                setTimeout(() => {
+                    window.location.href = 'about-blank-loader.html';
+                }, 2000);
+            }
+        }
+
+        // Start connection process
+        window.addEventListener('load', initializeConnection);
+    </script>
+</body>
+</html>
