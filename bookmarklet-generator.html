@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookmarklet Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Stealth Bookmarklet Generator</h1>
+            <p>Create bookmarklets for quick access</p>
+        </div>
+        
+        <div class="bookmarklet-section">
+            <h3>Quick Access Bookmarklets</h3>
+            
+            <div class="bookmarklet-item">
+                <h4>Stealth Tab Opener</h4>
+                <textarea id="stealthBookmarklet" readonly rows="3">javascript:(function(){var w=window.open('about:blank','_blank');w.document.write('<script>window.location="https://corrosion.pro"<\/script>');})();</textarea>
+                <button onclick="copyBookmarklet('stealthBookmarklet')">Copy Bookmarklet</button>
+                <a href="#" id="stealthLink">Drag to bookmarks</a>
+            </div>
+            
+            <div class="bookmarklet-item">
+                <h4>Custom Proxy Opener</h4>
+                <input type="text" id="customUrl" placeholder="Enter proxy URL" value="https://corrosion.pro">
+                <button onclick="generateCustomBookmarklet()">Generate Bookmarklet</button>
+                <textarea id="customBookmarklet" readonly rows="3"></textarea>
+                <button onclick="copyBookmarklet('customBookmarklet')">Copy Bookmarklet</button>
+            </div>
+            
+            <div class="instructions">
+                <h4>How to use:</h4>
+                <ol>
+                    <li>Copy the bookmarklet code above</li>
+                    <li>Create a new bookmark in your browser</li>
+                    <li>Paste the code as the URL</li>
+                    <li>Click the bookmark whenever you need private access</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateCustomBookmarklet() {
+            const url = document.getElementById('customUrl').value;
+            const bookmarkletCode = `javascript:(function(){var w=window.open('about:blank','_blank');w.document.write('<script>window.location="${url}"<\/script>');})();`;
+            document.getElementById('customBookmarklet').value = bookmarkletCode;
+        }
+
+        function copyBookmarklet(textareaId) {
+            const textarea = document.getElementById(textareaId);
+            textarea.select();
+            document.execCommand('copy');
+            alert('Bookmarklet copied to clipboard!');
+        }
+
+        // Initialize
+        generateCustomBookmarklet();
+    </script>
+</body>
+</html>
